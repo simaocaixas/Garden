@@ -24,6 +24,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(MaximumResourcesReachedException.class)
+    public ResponseEntity<Map<String, Object>> MaximumResourcesReachedException(MaximumResourcesReachedException ex) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("status", HttpStatus.CONFLICT.value());
+        error.put("message", ex.getMessage());
+        error.put("timestamp", LocalDateTime.now());
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, Object> error = new HashMap<>();

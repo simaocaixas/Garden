@@ -37,7 +37,6 @@ public class Tree extends PhysicEntity {
     @Column(name = "last_actualization")
     private LocalDateTime lastActualization;
 
-
     public Tree() {}
 
     public Tree(String specie, Integer height, Integer age, LeafType leafType) {

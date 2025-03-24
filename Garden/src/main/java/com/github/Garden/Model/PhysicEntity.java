@@ -1,25 +1,27 @@
 package com.github.Garden.Model;
 
+import jakarta.persistence.Embedded;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PostLoad;
 
 @MappedSuperclass
     public class PhysicEntity extends BaseEntity {
 
-        private Integer x, y;
+    @Embedded
+    private Point point;
 
-    public Integer getX() {
-        return x;
+    public Point getPoint() {
+        return point;
     }
 
-    public void setX(Integer x) {
-        this.x = x;
+    @PostLoad
+    public void ensurePointIsInitialized() {
+        if (this.point == null) {
+            this.point = new Point();
+        }
     }
 
-    public Integer getY() {
-        return y;
-    }
-
-    public void setY(Integer y) {
-        this.y = y;
+    public void setPoint(Point point) {
+        this.point = point;
     }
 }

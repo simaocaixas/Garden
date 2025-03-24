@@ -1,237 +1,37 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Árvores</title>
+    <title>Backend Project</title>
     <style>
         body {
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
-        }
-
-        .header {
-            background-color: #004d1a;
-            color: white;
-            padding: 20px;
-            font-size: 24px;
-            text-align: center;
-            position: relative;
-        }
-
-        .circle {
-            width: 50px;
-            height: 50px;
-            background-color: white;
-            border-radius: 50%;
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .container {
             display: flex;
-            justify-content: space-around;
-            margin: 20px;
-            height: 70vh;
-        }
-
-        .tree-list {
-            flex: 2;
-            margin-right: 20px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            overflow-y: auto; /* Habilita scroll */
-            max-height: 100%; /* Mantém tamanho fixo */
-        }
-
-        .add-tree {
-            flex: 1;
-            max-width: 300px; /* Tamanho fixo */
-            height: 250px; /* Altura fixa */
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             text-align: center;
+            flex-direction: column;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        h1 {
+            font-size: 36px;
+            color: #333;
         }
 
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        h2 {
+            font-size: 24px;
+            color: #666;
         }
-
-        th {
-            background-color: #28a745;
-            color: white;
-        }
-
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #218838;
-        }
-
-        .delete-button {
-            background-color: red;
-            padding: 5px 10px;
-        }
-
-        .delete-button:hover {
-            background-color: darkred;
-        }
-
-        #treeList {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="circle"></div>
-    Gestão de Árvores
-</div>
-
-<div class="container">
-    <div class="tree-list">
-        <h2>Lista de Árvores</h2>
-        <div id="treeList"></div>
-    </div>
-
-    <div class="add-tree">
-        <h2>Adicionar Nova Árvore</h2>
-        <input type="text" id="specie" placeholder="Espécie"><br><br>
-        <input type="number" id="height" placeholder="Altura (cm)"><br><br>
-        <input type="text" id="age" placeholder="Idade (anos)"><br><br>
-        <select id="leafType">
-            <option value="EVERGREEN">Evergreen</option>
-            <option value="DECIDUOUS">Deciduous</option>
-            <option value="SEMIDECIDIOUS">Semi-Deciduous</option>
-            <option value="MARCESCENT">Marcescent</option>
-            <option value="BROADLEAF">Broadleaf</option>
-            <option value="NEEDLELEAF">Needleleaf</option>
-        </select><br><br>
-
-        <button onclick="createTree()">Adicionar</button>
-    </div>
-</div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        fetchTrees();
-    });
-
-    function fetchTrees() {
-        fetch('http://localhost:8080/allTrees')
-            .then(response => response.json())
-            .then(data => {
-                const treeList = document.getElementById("treeList");
-                treeList.innerHTML = `
-                    <table>
-                        <tr>
-                            <th>Idade</th>
-                            <th>Espécie</th>
-                            <th>Altura</th>
-                            <th>Folha</th>
-                            <th>Actions</th>
-                        </tr>
-                    </table>
-                `;
-                const table = treeList.querySelector("table");
-
-                data.forEach(tree => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${tree.age} anos</td>
-                        <td>${tree.specie}</td>
-                        <td>${tree.height} cm</td>
-                           <td>${capitalizeFirstLetter(tree.leafType)}</td> </td>
-                        <td><button class="delete-button" onclick="deleteTree(${tree.id})">Excluir</button></td>
-                    `;
-                    table.appendChild(row);
-                });
-            })
-
-
-            .catch(error => {
-                console.error('Erro ao buscar árvores:', error);
-                document.getElementById("treeList").innerHTML = "<p>Erro ao carregar as árvores.</p>";
-            });
-    }
-
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-    }
-
-    function createTree() {
-        const specie = document.getElementById("specie").value;
-        const height = document.getElementById("height").value;
-        const age = document.getElementById("age").value;
-        const leafType = document.getElementById("leafType").value;
-
-        if (!specie || !height || !age || !leafType) {
-            alert("Preencha todos os campos!");
-            return;
-        }
-
-        fetch('http://localhost:8080/newTree', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ age: parseInt(age), specie: specie, height: parseFloat(height), leafType: leafType})
-        })
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById("specie").value = "";
-                    document.getElementById("height").value = "";
-                    document.getElementById("age").value = "";
-                    document.getElementById("leafType").value = "";
-                    fetchTrees();
-                } else {
-                    alert('Erro ao criar árvore.');
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro na requisição.');
-            });
-    }
-
-    function deleteTree(treeId) {
-        fetch(`http://localhost:8080/deleteTree/${treeId}`, { method: 'DELETE' })
-            .then(response => {
-                if (response.ok) {
-                    fetchTrees();
-                } else {
-                    alert("Erro ao excluir a árvore.");
-                }
-            })
-            .catch(error => {
-                console.error("Erro ao excluir árvore:", error);
-                alert("Erro ao excluir a árvore.");
-            });
-    }
-
-</script>
+<h1>Hi, welcome to one of my spring projects</h1>
+<h2>(There's nothing here go to read.me)</h2>
 
 </body>
 </html>

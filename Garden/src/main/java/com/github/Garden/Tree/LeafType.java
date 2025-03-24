@@ -1,4 +1,4 @@
-package com.github.Garden.Model;
+package com.github.Garden.Tree;
 
 public enum LeafType {
     EVERGREEN,

@@ -1,16 +1,25 @@
 package com.github.Garden.Model;
 
-import com.github.Garden.Tree.Position;
-import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
     public class PhysicEntity extends BaseEntity {
 
-    private Position position;
+        private Integer x, y;
 
-    public Position findPosition() {
+    public Integer getX() {
+        return x;
+    }
 
-        return position;
+    public void setX(Integer x) {
+        this.x = x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public void setY(Integer y) {
+        this.y = y;
     }
 }

@@ -1,13 +1,20 @@
 package com.github.Garden.Model;
 
+import com.github.Garden.Tree.LeafType;
+import com.github.Garden.Tree.TreeRepository;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 //import jakarta.persistence.MappedSuperclass;
 
 
 @Entity
 @Table(name = "tree_table")
+@EntityListeners(AuditingEntityListener.class)
 public class Tree extends PhysicEntity {
-
 
     @Column(name = "specie_name")
     private String specie;
@@ -22,6 +29,15 @@ public class Tree extends PhysicEntity {
     @Enumerated(EnumType.STRING)
     private LeafType leafType;
 
+    @Column(name = "creation_date")
+    @CreatedDate
+    private LocalDateTime createDate;
+
+    @LastModifiedDate
+    @Column(name = "last_actualization")
+    private LocalDateTime lastActualization;
+
+
     public Tree() {}
 
     public Tree(String specie, Integer height, Integer age, LeafType leafType) {
@@ -29,7 +45,22 @@ public class Tree extends PhysicEntity {
         this.height = height;
         this.age = age;
         this.leafType = leafType;
-        this.findPosition();
+    }
+
+    public LocalDateTime getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
+    }
+
+    public LocalDateTime getLastActualization() {
+        return lastActualization;
+    }
+
+    public void setLastActualization(LocalDateTime lastActualization) {
+        this.lastActualization = lastActualization;
     }
 
     public Integer getAge() {

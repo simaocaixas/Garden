@@ -1,37 +1,60 @@
 package com.github.Garden.Tree;
 
 import com.github.Garden.Model.Tree;
-import com.github.Garden.Room.RoomService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.Garden.Tree.TreeDTO.TreeDTO;
+import com.github.Garden.Tree.TreeDTO.TreeMapper;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
+import java.net.URI;
+
 
 @RestController
+@RequestMapping("/tree")
 public class TreeController {
 
-    @Autowired
+
     private TreeService treeService;
+    private TreeMapper treeMapper;
 
-
-    public TreeController(TreeService treeService) {
+    public TreeController(TreeService treeService, TreeMapper treeMapper) {
         this.treeService = treeService;
+        this.treeMapper = treeMapper;
     }
 
-    @PostMapping("/newTree")
-    public void createTree(@RequestBody Tree tree) {
+    @PostMapping()
+    public ResponseEntity<Object> createTree(@Valid @RequestBody TreeDTO treeDto) {
+
+        Tree tree = treeMapper.toEntity(treeDto);
         treeService.createTree(tree);
+        URI location = ServletUriComponentsBuilder.
+                fromCurrentRequest().
+                path("/{id}").
+                buildAndExpand(tree.getId())
+                .toUri();
+        return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/allTrees")
-    public List<Tree> getAllTrees() {
-        List<Tree> trees = treeService.getAllTrees();
-        return trees;
+    @GetMapping("/{id}")
+    public ResponseEntity<TreeDTO> treeDetails(@PathVariable Long id) {
+        Tree tree = treeService.getById(id);
+        TreeDTO dto = treeMapper.toDTO(tree);
+        return ResponseEntity.ok(dto);
     }
 
-    @DeleteMapping("/deleteTree/{id}")
-    public void deleteTree(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTree(@PathVariable Long id) {
         treeService.deleteTree(id);
+        return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateTree(@Valid @RequestBody TreeDTO newTreeDto, @PathVariable Long id) {
+        Tree newTree = treeMapper.toEntity(newTreeDto);
+        treeService.updateTree(newTree, id);
+        return ResponseEntity.ok().build();
+    }
+    
 }

@@ -1,15 +1,12 @@
 package com.github.Garden.Model;
 
 import com.github.Garden.Tree.LeafType;
-import com.github.Garden.Tree.TreeRepository;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-//import jakarta.persistence.MappedSuperclass;
-
 
 @Entity
 @Table(name = "tree_table")
@@ -20,7 +17,7 @@ public class Tree extends PhysicEntity {
     private String specie;
 
     @Column(name = "tree_height")
-    private Integer height;  // like 3m, Integer wrapper to init as null
+    private Double height;  // like 3m, Integer wrapper to init as null
 
     @Column(name = "tree_age")
     private Integer age;
@@ -39,7 +36,7 @@ public class Tree extends PhysicEntity {
 
     public Tree() {}
 
-    public Tree(String specie, Integer height, Integer age, LeafType leafType) {
+    public Tree(String specie, Double height, Integer age, LeafType leafType) {
         this.specie = specie;
         this.height = height;
         this.age = age;
@@ -86,11 +83,11 @@ public class Tree extends PhysicEntity {
         this.specie = specie;
     }
 
-    public Integer getHeight() {
+    public Double getHeight() {
         return height;
     }
 
-    public void setHeight(Integer height) {
+    public void setHeight(Double height) {
         this.height = height;
     }
 }

@@ -2,13 +2,11 @@ package com.github.Garden.Tree;
 
 import com.github.Garden.Exceptions.MaximumResourcesReachedException;
 import com.github.Garden.Exceptions.ResourceNotFoundException;
-import com.github.Garden.Model.PhysicEntity;
 import com.github.Garden.Model.Point;
 import com.github.Garden.Model.Tree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 public class TreeService {
@@ -16,8 +14,9 @@ public class TreeService {
     @Autowired
     private TreeRepository treeRepository;
 
-    private static final int MAXIMUM_ROOM_CAPACITY = 100; // Each tree occupies one square meter
-    private static final int MAXIMUM_COLUMN_CAPACITY = MAXIMUM_ROOM_CAPACITY/10;     // Ten columns  fill the room (idk just to add some business logic)
+    private static final int MAXIMUM_ROW_CAPACITY = 10;
+    private static final int MAXIMUM_COLUMN_CAPACITY = 10;     // Ten columns  fill the room (idk just to add some business logic)
+    private static final int MAXIMUM_ROOM_CAPACITY = MAXIMUM_ROW_CAPACITY * MAXIMUM_COLUMN_CAPACITY; // Each tree occupies one square meter
 
     public TreeService()  {}
 
@@ -28,19 +27,15 @@ public class TreeService {
     public void createTree(Tree tree) {
 
         long totalTrees = treeRepository.count();
-
         if (totalTrees >= MAXIMUM_ROOM_CAPACITY) {
             throw new MaximumResourcesReachedException("Tree limit reached, no room for more! Maximum: " + MAXIMUM_ROOM_CAPACITY);
         }
-
-        Tree lastTree = treeRepository.findFirstByOrderByIdDesc();
-        Point lastTreePoint = lastTree.getPoint();
 
         if (tree.getPoint() == null) {
             tree.setPoint(new Point());
         }
 
-        Point newTreePosition = findPosition(lastTreePoint.getX(), lastTreePoint.getY());
+        Point newTreePosition = findPosition();
 
         tree.getPoint().setX(newTreePosition.getX());
         tree.getPoint().setY(newTreePosition.getY());
@@ -48,10 +43,18 @@ public class TreeService {
         treeRepository.save(tree);
    }
 
-    public Point findPosition(int x, int y) {
-        int newX = (x < MAXIMUM_COLUMN_CAPACITY) ? x + 1 : 1;
-        int newY = (x < MAXIMUM_COLUMN_CAPACITY) ? y : y + 1;
-        return new Point(newX, newY);
+    public Point findPosition() {
+
+        for (int y = 1; y <= MAXIMUM_COLUMN_CAPACITY; y++) {
+            for (int x = 1; x <= MAXIMUM_ROW_CAPACITY; x++) {
+                Point point = new Point(x,y);
+                boolean isOccupied = treeRepository.existsByPoint_XAndPoint_Y(x,y);
+                if (!isOccupied) {
+                    return point;
+                }
+            }
+        }
+        throw new MaximumResourcesReachedException("No available position for the tree!");
     }
 
     public void deleteTree(Long id) {

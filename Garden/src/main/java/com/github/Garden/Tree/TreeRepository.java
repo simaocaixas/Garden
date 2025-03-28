@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TreeRepository extends JpaRepository<Tree, Long> {
-    Tree findFirstByOrderByIdDesc();
+    boolean existsByPoint_XAndPoint_Y(int x, int y);
 }

@@ -14,13 +14,6 @@ import jakarta.persistence.PostLoad;
         return point;
     }
 
-    @PostLoad
-    public void ensurePointIsInitialized() {
-        if (this.point == null) {
-            this.point = new Point();
-        }
-    }
-
     public void setPoint(Point point) {
         this.point = point;
     }

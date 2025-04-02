@@ -2,8 +2,8 @@ package com.github.Garden.Tree;
 
 import com.github.Garden.Exceptions.MaximumResourcesReachedException;
 import com.github.Garden.Exceptions.ResourceNotFoundException;
-import com.github.Garden.Model.Point;
-import com.github.Garden.Model.Tree;
+import com.github.Garden.Entities.Point;
+import com.github.Garden.Entities.Tree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

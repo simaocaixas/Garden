@@ -18,16 +18,14 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/public/**").permitAll()  // Permite acesso público
-                        .anyRequest().authenticated()  // Requer login para acessar outras páginas
+                        .requestMatchers("/", "/public/**").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults());  // Ativa o login padrão do Spring Security
+                .formLogin(Customizer.withDefaults());
 
 
         return http.build();
     }
-
-
 
     @Bean
     public UserDetailsService userDetailsService() {

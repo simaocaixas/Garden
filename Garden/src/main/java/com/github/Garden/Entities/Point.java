@@ -1,8 +1,6 @@
-package com.github.Garden.Model;
+package com.github.Garden.Entities;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.PostLoad;
-import org.springframework.stereotype.Component;
 
 @Embeddable
 public class Point {

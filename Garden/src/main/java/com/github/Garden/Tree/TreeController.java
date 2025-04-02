@@ -1,6 +1,6 @@
 package com.github.Garden.Tree;
 
-import com.github.Garden.Model.Tree;
+import com.github.Garden.Entities.Tree;
 import com.github.Garden.Tree.TreeDTO.TreeDTO;
 import com.github.Garden.Tree.TreeDTO.TreeMapper;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.github.Garden.Model;
+package com.github.Garden.Entities;
 
 import jakarta.persistence.*;
 

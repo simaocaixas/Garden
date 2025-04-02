@@ -1,23 +1,18 @@
-package com.github.Garden.User;
+package com.github.Garden.Security;
 
-import com.github.Garden.Model.User;
+import com.github.Garden.Entities.User;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.List;
 
-public class CustomUserDetails implements UserDetails {
+//decorator
+@AllArgsConstructor
+public class UserSecurity implements UserDetails {
 
     private final User user;
-
-    public CustomUserDetails(User user) {
-        this.user = user;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> user.getRole());
-    }
 
     @Override
     public String getPassword() {
@@ -26,7 +21,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return getUsername();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(()-> "read");
     }
 
     @Override
@@ -48,4 +48,5 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

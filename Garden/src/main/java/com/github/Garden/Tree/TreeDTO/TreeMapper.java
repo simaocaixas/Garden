@@ -1,6 +1,6 @@
 package com.github.Garden.Tree.TreeDTO;
 
-import com.github.Garden.Model.Tree;
+import com.github.Garden.Entities.Tree;
 import org.springframework.stereotype.Component;
 
 @Component

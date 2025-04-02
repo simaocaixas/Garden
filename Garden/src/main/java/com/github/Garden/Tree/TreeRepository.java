@@ -1,5 +1,5 @@
 package com.github.Garden.Tree;
-import com.github.Garden.Model.Tree;
+import com.github.Garden.Entities.Tree;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
